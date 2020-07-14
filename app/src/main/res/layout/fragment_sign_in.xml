@@ -67,7 +67,7 @@
             tools:layout_editor_absoluteY="387dp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvForgetPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

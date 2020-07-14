@@ -34,6 +34,7 @@ public class SignInFragment extends Fragment {
 
     private FrameLayout parentFrameLayout;
     private TextView tvDontHaveAnAccount;
+    private TextView forgetPassword;
     FirebaseAuth firebaseAuth;
 
     private EditText etEmail;
@@ -60,6 +61,7 @@ public class SignInFragment extends Fragment {
         etPassword= view.findViewById(R.id.etPassword);
         btnSignIn= view.findViewById(R.id.btnSignIn);
         progressBar= view.findViewById(R.id.signInProgressBar);
+        forgetPassword= view.findViewById(R.id.tvForgetPassword);
         firebaseAuth= FirebaseAuth.getInstance();
 
         return view;
@@ -110,6 +112,12 @@ public class SignInFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 checkEmailAndPassword();
+            }
+        });
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(new ResetPasswordFragment());
             }
         });
 
