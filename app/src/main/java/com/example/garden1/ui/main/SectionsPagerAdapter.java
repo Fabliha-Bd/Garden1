@@ -1,19 +1,13 @@
 package com.example.garden1.ui.main;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.garden1.MainActivity;
 import com.example.garden1.R;
 
 /**
@@ -39,7 +33,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch(position)
         {
             case 0:
-                fragment= PlaceholderFragment.newInstance(0);
+                fragment= TimelineTab.newInstance(0);
                 break;
             case 1:
                 fragment= ShopTab.newInstance(1);

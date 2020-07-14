@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.garden1.R;
-import com.squareup.picasso.Picasso;
+import com.example.garden1.ui.main.Model.Upload;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.garden1.ui.main;
+package com.example.garden1.ui.main.Model;
 
 public class Upload {
     private String mName;
