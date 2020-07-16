@@ -1,6 +1,7 @@
 package com.example.garden1.ui.main;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.garden1.ui.main.Model.CartItem;
@@ -11,6 +12,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +52,7 @@ public class SeedsActivity extends AppCompatActivity {
     private FloatingActionButton btnGoToCart;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +76,8 @@ public class SeedsActivity extends AppCompatActivity {
         Log.v("Cart",mDatabaseRefCart.getRepo().toString());
         firebaseAuth= FirebaseAuth.getInstance();
         String uploadIdParent = firebaseAuth.getCurrentUser().getUid();
+
+
         btnGoToCart= (FloatingActionButton) findViewById(R.id.btnGoToCart);
         btnGoToCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,8 +87,14 @@ public class SeedsActivity extends AppCompatActivity {
                     CartText+=(entry.getKey() + " = " + entry.getValue()+"\n");
                     CartItem cartItem = new CartItem(entry.getValue().getName(),
                     entry.getValue().getPrice(), entry.getValue().getType(),entry.getValue().getQuantity());
+                    //time
+                    LocalDateTime myDateObj = LocalDateTime.now();
+                    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                    String presentDateTime = myDateObj.format(myFormatObj);
+                    Log.v("Cart","Present Date Time "+presentDateTime);
+                    //key
                     String uploadId= mDatabaseRefCart.push().getKey();
-                    mDatabaseRefCart.child(uploadIdParent).child(uploadId).setValue(cartItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    mDatabaseRefCart.child(uploadIdParent).child(presentDateTime).child(uploadId).setValue(cartItem).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful())
