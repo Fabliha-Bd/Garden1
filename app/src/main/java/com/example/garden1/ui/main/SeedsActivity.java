@@ -3,6 +3,7 @@ package com.example.garden1.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.garden1.ui.main.Model.CartItem;
 import com.example.garden1.ui.main.Model.Upload;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -12,7 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,15 +27,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SeedsActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private ImageAdapter mAdapter;
+    private SeedsImageAdapter mAdapter;
     private ProgressBar mProgressCircle;
     private DatabaseReference mDatabaseRef;
     private List<Upload> mUploads;
+    private HashMap<String,CartItem> itemsMap;
+    private FloatingActionButton btnGoToCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +60,26 @@ public class SeedsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnGoToCart= (FloatingActionButton) findViewById(R.id.btnGoToCart);
+        btnGoToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String CartText="";
+                for (Map.Entry<String, CartItem> entry : itemsMap.entrySet()) {
+                    CartText+=(entry.getKey() + " = " + entry.getValue()+"\n");
+                }
+                Log.v("Cart",CartText);
+            }
+        });
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mProgressCircle = findViewById(R.id.progress_circle);
         mUploads = new ArrayList<>();
+       // items= new ArrayList<>();
+        itemsMap=new HashMap<String, CartItem>();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("seeds/");
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -67,7 +88,7 @@ public class SeedsActivity extends AppCompatActivity {
                     Upload upload = postSnapshot.getValue(Upload.class);
                     mUploads.add(upload);
                 }
-                mAdapter = new ImageAdapter(SeedsActivity.this, mUploads);
+                mAdapter = new SeedsImageAdapter(SeedsActivity.this, mUploads, itemsMap);
                 mRecyclerView.setAdapter(mAdapter);
                 mProgressCircle.setVisibility(View.INVISIBLE);
 

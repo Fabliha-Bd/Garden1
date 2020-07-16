@@ -4,6 +4,7 @@ public class Upload {
     private String mName;
     private String mImageUrl;
     private String mPrice;
+    private String mType;
 
 
     public Upload() {
@@ -18,6 +19,16 @@ public class Upload {
         mPrice= price;
         mImageUrl = imageUrl;
     }
+    public Upload(String name, String price, String imageUrl, String type) {
+        if (name.trim().equals("")) {
+            name = "No Name";
+        }
+        mName = name;
+        mPrice= price;
+        mImageUrl = imageUrl;
+        mType=type;
+    }
+
 
     public String getName() {
         return mName;
@@ -42,5 +53,13 @@ public class Upload {
 
     public void setmPrice(String mPrice) {
         this.mPrice = mPrice;
+    }
+
+    public String getmType() {
+        return mType;
+    }
+
+    public void setmType(String mType) {
+        this.mType = mType;
     }
 }

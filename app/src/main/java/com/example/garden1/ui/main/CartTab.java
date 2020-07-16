@@ -22,6 +22,7 @@ import com.example.garden1.R;
 public class CartTab extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private PageViewModel pageViewModel;
+    private TextView tvItemName;
 
     // TODO: Rename and change types and number of parameters
     public static CartTab newInstance(int index) {
@@ -49,6 +50,8 @@ public class CartTab extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_cart, container, false);
+        tvItemName= root.findViewById(R.id.tvItemName);
+
         return root;
     }
 }

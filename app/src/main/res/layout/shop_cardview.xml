@@ -43,6 +43,7 @@
                 android:layout_height="200dp" />
 
             <Button
+                android:id="@+id/btnAddToCart"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_gravity="right|end"
