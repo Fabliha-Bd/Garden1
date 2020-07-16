@@ -5,9 +5,12 @@ import android.os.Bundle;
 
 import com.example.garden1.ui.main.Model.CartItem;
 import com.example.garden1.ui.main.Model.Upload;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.garden1.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,9 +41,12 @@ public class SeedsActivity extends AppCompatActivity {
     private SeedsImageAdapter mAdapter;
     private ProgressBar mProgressCircle;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRefCart;
+    private FirebaseAuth firebaseAuth;
     private List<Upload> mUploads;
     private HashMap<String,CartItem> itemsMap;
     private FloatingActionButton btnGoToCart;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +67,38 @@ public class SeedsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        mDatabaseRefCart = FirebaseDatabase.getInstance().getReference("cartitem");
+        Log.v("Cart",mDatabaseRefCart.getRepo().toString());
+        firebaseAuth= FirebaseAuth.getInstance();
+        String uploadIdParent = firebaseAuth.getCurrentUser().getUid();
         btnGoToCart= (FloatingActionButton) findViewById(R.id.btnGoToCart);
         btnGoToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String CartText="";
                 for (Map.Entry<String, CartItem> entry : itemsMap.entrySet()) {
                     CartText+=(entry.getKey() + " = " + entry.getValue()+"\n");
+                    CartItem cartItem = new CartItem(entry.getValue().getName(),
+                    entry.getValue().getPrice(), entry.getValue().getType(),entry.getValue().getQuantity());
+                    String uploadId= mDatabaseRefCart.push().getKey();
+                    mDatabaseRefCart.child(uploadIdParent).child(uploadId).setValue(cartItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful())
+                            {
+                                Log.v("Cart","Cart Data Added");
+
+                            }
+                            else{
+                                String error= task.getException().getMessage();
+                                Toast.makeText(SeedsActivity.this, error, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                 }
+                Intent intent= new Intent(SeedsActivity.this,CartTab.class);
+                finish();
                 Log.v("Cart",CartText);
             }
         });
